@@ -1,8 +1,8 @@
-name: py3.5
+name: spn_pytorch
 channels:
-- soumith
-- conda-forge
 - defaults
+- conda-forge
+- pytorch
 dependencies:
 - beautifulsoup4=4.6.0=py35_0
 - blas=1.1=openblas
@@ -112,5 +112,4 @@ dependencies:
   - torch==0.2.0.post2
   - urllib3==1.22
   - visdom==0.1.5
-prefix: /root/Util/miniconda/envs/py3.5
 

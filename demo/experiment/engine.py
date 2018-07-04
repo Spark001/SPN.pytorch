@@ -99,7 +99,7 @@ class Engine(object):
         state_dicts = []
         if not os.path.exists(self.state['save_model_path']):
             os.makedirs(self.state['save_model_path'])
-        filename = os.path.join(self.state['save_model_path'], 'model.pth.tar')
+        filename = os.path.join(self.state['save_model_path'], 'model629_multi.pth.tar')
         for imsize in scales:
             self.state = deepcopy(src_state)
             self.state['image_size'] = int(imsize)
@@ -216,6 +216,7 @@ class Engine(object):
 
             self.state['input'] = input
             self.state['target'] = target
+            # print ("---", target)
 
             self.on_start_batch(True, model, criterion, data_loader, optimizer)
             if self.state['use_gpu']:

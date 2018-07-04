@@ -13,6 +13,10 @@ from urllib.request import urlretrieve
 import experiment.models as models
 from evaluation.SP_GoogLeNet import SP_GoogLeNet
 
+import sys
+sys.path.insert(0, '/home/disk/workspace')
+from Library.pascal_voc_io import PascalVocWriter
+
 class Warp(object):
     def __init__(self, size, interpolation=Image.BILINEAR):
         self.size = int(size)
@@ -119,6 +123,7 @@ class AveragePrecisionMeter(object):
         precision_at_i = 0.
         for i in indices:
             label = target[i]
+            # print (label)
             if difficult_examples and label == 0:
                 continue
             if label == 1:
@@ -133,6 +138,7 @@ class AveragePrecisionMeter(object):
 def load_ground_truth_voc(data_root, split):
     ground_truth = dict(
         image_list = [],
+        black_list = [],
         image_sizes = [],
         gt_labels = [],
         gt_bboxes = [],
@@ -309,3 +315,16 @@ def draw_bboxes(img, bboxes, class_names, width=3, font_size=20, color=(255, 255
         draw.line((xmin, ymin, xmin, ymax), fill=color, width=width)
         draw.text((xmin, ymin), '{}({:.2f})'.format(class_names[int(class_idx)], score), font=fnt, fill=color)
     return img
+
+def write_cam(img_name, img_index, bboxes, class_names):
+    import cv2
+    img = cv2.imread(img_name)
+    writer = PascalVocWriter(img_name,img_name,img.shape)
+    for bbox in bboxes:
+        class_idx, xmin, ymin, xmax, ymax, score = bbox
+        xmin, ymin, xmax, ymax = map(round,map(float,[xmin, ymin, xmax, ymax]))
+        # print (xmin, ymin, xmax, ymax)
+        cls = class_names[int(class_idx)]
+        writer.addBndBox(xmin,ymin,xmax,ymax,cls,0,score)
+    writer.save('/home/disk/dataset/voc/VOC/VOCdevkit2007/VOC2007/CAMAnnotation/'
+                +str(img_index)+'.xml')

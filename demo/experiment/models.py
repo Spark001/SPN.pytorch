@@ -23,14 +23,15 @@ class SPNetWSL(nn.Module):
     def forward(self, x): 
         x = self.features(x)
         x = self.spatial_pooling(x)
-        x = x = x.view(x.size(0), -1)
+        x = x.view(x.size(0), -1)
         x = self.classifier(x)
         return x
 
 def vgg16_sp(num_classes, pretrained=True, num_maps=1024):
     model = models.vgg16(pretrained=False)
     if pretrained:
-        model_path = 'models/VGG16_ImageNet.pt'
+        # model_path = 'models/VGG16_ImageNet.pt'
+        model_path = 'models/vgg16_from_caffe.pth'
         if os.path.isfile(model_path):
             state_dict = torch.load(model_path)
             model.load_state_dict(state_dict)
